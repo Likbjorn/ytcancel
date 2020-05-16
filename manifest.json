@@ -6,5 +6,23 @@
     "background": {
       "scripts": ["background.js"],
       "persistent": false
+  },
+  "commands": {
+      "cancel": {
+        "suggested_key": {
+          "default": "Ctrl+Z"
+        },
+        "description": "Resets video cursor to the latest moment before rewind"
+        }
     },
+  "content_scripts":
+  [
+    {
+          "matches": ["*://*.youtube.com/watch*"],
+          "js": ["contentscript.js"],
+          "all_frames": true,
+          "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage"]
 }
