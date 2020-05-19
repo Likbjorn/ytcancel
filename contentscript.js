@@ -1,4 +1,4 @@
-console.log("contentscript.js started");
+console.log("CTRL+Z for YouTube is running on this page");
 
 let vid = document.getElementsByTagName("video")[0]; //we only have one video
 
