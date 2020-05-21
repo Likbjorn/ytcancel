@@ -10,6 +10,12 @@ function messageToActiveTab(message) {
 chrome.commands.onCommand.addListener(function(command) {
     console.log("Command: ", command);
     if (command === "cancel") {
-        messageToActiveTab("cancel");
+        messageToActiveTab({message: "cancel"});
+    }
+});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+    if(changeInfo && changeInfo.status == "complete"){
+        chrome.tabs.sendMessage(tabId, {message: "update", data: tab});
     }
 });
