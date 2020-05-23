@@ -24,5 +24,5 @@
           "run_at": "document_idle"
     }
   ],
-  "permissions": ["storage", "*://*.youtube.com/*"]
+  "permissions": ["*://*.youtube.com/*"]
 }

@@ -3,6 +3,7 @@ console.log("CTRL+Z for YouTube is running on this page");
 const threshold = 10;
 let vid;
 let previousTime;
+let backupTime;
 
 function initVid() {
     vid = document.getElementsByTagName("video")[0]; //we only have one video
@@ -11,14 +12,12 @@ function initVid() {
         return;
     }
     previousTime = vid.currentTime;
-    chrome.storage.local.set({backupTime: 0}, function() {
-        console.log('backupTime is set to ' + previousTime);
-    });
+    backupTime = 0;
+    console.log('backupTime is set to ' + backupTime);
     vid.addEventListener("timeupdate", function () {
         if (Math.abs(previousTime - vid.currentTime) > threshold) {
-            chrome.storage.local.set({backupTime: previousTime}, function() {
-                console.log('backupTime is set to ' + previousTime);
-            });
+            backupTime = previousTime;
+            console.log('backupTime is set to ' + backupTime);
         }
         previousTime = vid.currentTime;
     });
@@ -28,10 +27,8 @@ function initVid() {
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     console.log("Got message from background page: ", msg.message);
     if (msg.message === "cancel") {
-        chrome.storage.local.get(['backupTime'], function(result) {
-            console.log('Jumping from ', vid.currentTime, ' to ', result.backupTime);
-            vid.currentTime = result.backupTime;
-        });
+        console.log('Jumping from ', vid.currentTime, ' to ', backupTime);
+        vid.currentTime = backupTime;
     }
     else if (msg.message === "update") {
         initVid();
