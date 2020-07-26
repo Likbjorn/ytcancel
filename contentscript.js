@@ -26,11 +26,14 @@ function initVid() {
 
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     console.log("Got message from background page: ", msg.message);
-    if (msg.message === "cancel") {
+    if (msg.message === "update") {
+        initVid();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key === 'z') {
         console.log('Jumping from ', vid.currentTime, ' to ', backupTime);
         vid.currentTime = backupTime;
-    }
-    else if (msg.message === "update") {
-        initVid();
     }
 });

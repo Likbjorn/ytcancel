@@ -7,14 +7,6 @@
       "scripts": ["background.js"],
       "persistent": false
   },
-  "commands": {
-      "cancel": {
-        "suggested_key": {
-          "default": "Ctrl+Z"
-        },
-        "description": "Resets video cursor to the latest moment before rewind"
-        }
-    },
   "content_scripts":
   [
     {
