@@ -16,7 +16,9 @@ function initVid() {
     console.log('backupTime is set to ' + backupTime);
     vid.addEventListener("timeupdate", updateTimes);
 
-    insertControls();
+    if (!document.contains(document.getElementById('cancel'))) {
+        insertControls();
+    }
 }
 
 
@@ -38,6 +40,7 @@ function rewind(vid, time) {
 function insertControls() {
     controlPanel = document.getElementsByClassName('ytp-left-controls')[0];
     let cancelButton = document.createElement('button');
+    cancelButton.id = 'cancel';
     cancelButton.classList.add('ytp-button');
     cancelButton.innerHTML = `
     <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
