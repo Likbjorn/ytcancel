@@ -8,6 +8,14 @@ let undoTimes;
 let redoTimes;
 let undoInProgress = false;
 
+const undoSVG = `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
+<path class="ytp-svg-fill" d="M 6 14 v 8 h 8 l -2 -2 q 9 -8 18 2 q -11 -17 -22 -6 Z"></path>
+</svg>`;
+
+const redoSVG = `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
+<path class="ytp-svg-fill" d="M 30 14 v 8 h -8 l 2 -2 q -9 -8 -18 2 q 11 -17 22 -6 Z"></path>
+</svg>`;
+
 
 function initVid() {
     vid = document.getElementsByTagName("video")[0]; //we only have one video
@@ -73,20 +81,27 @@ function redo() {
 
 function insertControls() {
     controlPanel = document.getElementsByClassName('ytp-left-controls')[0];
-    let cancelButton = document.createElement('button');
-    cancelButton.id = 'cancel';
-    cancelButton.classList.add('ytp-button');
-    cancelButton.setAttribute('aria-label', 'Rewind to backup (Ctrl+Z)');
-    cancelButton.setAttribute('title', 'Rewind to backup (Ctrl+Z)');
-    cancelButton.innerHTML = `
-    <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
-    <path class="ytp-svg-fill" d="M 6 14 v 8 h 8 l -2 -2 q 9 -8 18 2 q -11 -17 -22 -6 Z"></path>
-    </svg>
-    `;
-    cancelButton.onclick = function() {
+    let undoButton = document.createElement('button');
+    undoButton.id = 'cancel';
+    undoButton.classList.add('ytp-button');
+    undoButton.setAttribute('aria-label', 'Rewind to backup (Ctrl+Z)');
+    undoButton.setAttribute('title', 'Rewind to backup (Ctrl+Z)');
+    undoButton.innerHTML = undoSVG;
+    undoButton.onclick = function() {
         undo();
     };
-    controlPanel.append(cancelButton);
+    controlPanel.append(undoButton);
+
+    let redoButton = document.createElement('button');
+    redoButton.id = 'redo';
+    redoButton.classList.add('ytp-button');
+    redoButton.setAttribute('aria-label', 'Redo (Ctrl+Y)');
+    redoButton.setAttribute('title', 'Redo (Ctrl+Y)');
+    redoButton.innerHTML = redoSVG;
+    redoButton.onclick = function() {
+        redo();
+    };    
+    controlPanel.append(redoButton);
 }
 
 
