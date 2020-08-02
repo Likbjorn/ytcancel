@@ -4,6 +4,9 @@ const threshold = 10;
 let vid;
 let previousTime;
 let backupTime;
+let undoTimes;
+let redoTimes;
+let undoInProgress = false;
 
 
 function initVid() {
@@ -13,10 +16,11 @@ function initVid() {
         return;
     }
     previousTime = vid.currentTime;
-    backupTime = 0;
-    console.log('backupTime is set to ' + backupTime);
+    undoTimes = [];
+    redoTimes = [];
     vid.addEventListener("timeupdate", updateTimes);
 
+    // insert UI buttons on YouTube player control panel
     if (!document.contains(document.getElementById('cancel'))) {
         insertControls();
     }
@@ -24,9 +28,16 @@ function initVid() {
 
 
 function updateTimes() {
-    if (Math.abs(previousTime - vid.currentTime) > threshold) {
-        backupTime = previousTime;
-        console.log('backupTime is set to ' + backupTime);
+    if (undoInProgress) {
+        console.log('Undo in progress, new backup times are not remembered');
+        console.log('undoTimes are:  ' + undoTimes);
+        console.log('redoTimes are:  ' + redoTimes);
+        undoInProgress = false;
+    } else if (Math.abs(previousTime - vid.currentTime) > threshold) {
+        undoTimes.push(previousTime);
+        redoTimes = [];
+        console.log('undoTimes are:  ' + undoTimes);
+        console.log('redoTimes are:  ' + redoTimes);
     }
     previousTime = vid.currentTime;
 }
@@ -35,6 +46,28 @@ function updateTimes() {
 function rewind(vid, time) {
     console.log('Jumping from ', vid.currentTime, ' to ', time);
     vid.currentTime = time;
+}
+
+
+function undo() {
+    if (undoTimes.length > 0) {
+        backupTime = undoTimes.pop();
+    }
+    else return; // do nothing if no undo times left
+    redoTimes.push(vid.currentTime);
+    undoInProgress = true; // do not trigger updateTimes function
+    rewind(vid, backupTime);
+}
+
+
+function redo() {
+    if (redoTimes.length > 0) {
+        backupTime = redoTimes.pop();
+    }
+    else return;
+    undoTimes.push(vid.currentTime);
+    undoInProgress = true;
+    rewind(vid, backupTime);
 }
 
 
@@ -51,7 +84,7 @@ function insertControls() {
     </svg>
     `;
     cancelButton.onclick = function() {
-        rewind(vid, backupTime);
+        undo();
     };
     controlPanel.append(cancelButton);
 }
@@ -67,6 +100,8 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.code === 'KeyZ') {
-        rewind(vid, backupTime);
+        undo();
+    } else if (event.ctrlKey && event.code === 'KeyY') {
+        redo();
     }
 });
