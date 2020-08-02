@@ -5,6 +5,7 @@ let vid;
 let previousTime;
 let backupTime;
 
+
 function initVid() {
     vid = document.getElementsByTagName("video")[0]; //we only have one video
     if (typeof vid === "undefined") {
