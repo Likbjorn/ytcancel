@@ -29,7 +29,7 @@ function initVid() {
     vid.addEventListener("timeupdate", updateTimes);
 
     // insert UI buttons on YouTube player control panel
-    if (!document.contains(document.getElementById('cancel'))) {
+    if (!document.contains(document.getElementById('ytz-undo'))) {
         insertControls();
     }
 }
@@ -81,8 +81,9 @@ function redo() {
 
 function insertControls() {
     controlPanel = document.getElementsByClassName('ytp-left-controls')[0];
+    console.log(controlPanel);
     let undoButton = document.createElement('button');
-    undoButton.id = 'cancel';
+    undoButton.id = 'ytz-undo';
     undoButton.classList.add('ytp-button');
     undoButton.setAttribute('aria-label', 'Rewind to backup (Ctrl+Z)');
     undoButton.setAttribute('title', 'Rewind to backup (Ctrl+Z)');
@@ -93,14 +94,14 @@ function insertControls() {
     controlPanel.append(undoButton);
 
     let redoButton = document.createElement('button');
-    redoButton.id = 'redo';
+    redoButton.id = 'ytz-redo';
     redoButton.classList.add('ytp-button');
     redoButton.setAttribute('aria-label', 'Redo (Ctrl+Y)');
     redoButton.setAttribute('title', 'Redo (Ctrl+Y)');
     redoButton.innerHTML = redoSVG;
     redoButton.onclick = function() {
         redo();
-    };    
+    };
     controlPanel.append(redoButton);
 }
 

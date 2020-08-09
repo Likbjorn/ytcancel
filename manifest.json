@@ -1,6 +1,6 @@
 {
     "name": "Ctrl+Z for YouTube",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Ever misclicked number keys while watching video and rewinded your movie? You can cancel it now!",
     "manifest_version": 2,
     "background": {
