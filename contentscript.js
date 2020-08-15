@@ -8,6 +8,8 @@ let undoTimes;
 let redoTimes;
 let undoInProgress = false;
 
+// svg code is present here because it is simple and it must be inline,
+// otherwise styles will not be inherited
 const undoSVG = `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
 <path class="ytp-svg-fill" d="M 6 14 v 8 h 8 l -2 -2 q 9 -8 18 2 q -11 -17 -22 -6 Z"></path>
 </svg>`;
@@ -81,7 +83,7 @@ function redo() {
 
 function insertControls() {
     controlPanel = document.getElementsByClassName('ytp-left-controls')[0];
-    console.log(controlPanel);
+
     let undoButton = document.createElement('button');
     undoButton.id = 'ytz-undo';
     undoButton.classList.add('ytp-button');
