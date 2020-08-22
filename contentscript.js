@@ -8,6 +8,9 @@ let undoTimes;
 let redoTimes;
 let undoInProgress = false;
 
+let undoButton;
+let redoButton;
+
 // svg code is present here because it is simple and it must be inline,
 // otherwise styles will not be inherited
 const undoSVG = `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" align="center">
@@ -25,6 +28,7 @@ function initVid() {
         console.log("No videos found on the page.");
         return;
     }
+    console.log("New video found");
     previousTime = vid.currentTime;
     undoTimes = [];
     redoTimes = [];
@@ -48,8 +52,24 @@ function updateTimes() {
         redoTimes = [];
         console.log('undoTimes are:  ' + undoTimes);
         console.log('redoTimes are:  ' + redoTimes);
+
+        setButtonsVisibility();
     }
     previousTime = vid.currentTime;
+}
+
+
+function setButtonsVisibility() {
+    if (redoTimes.length === 0) {
+        redoButton.style.display = 'none';
+    } else {
+        redoButton.style.display = 'inline';
+    }
+    if (undoTimes.length === 0) {
+        undoButton.style.display = 'none';
+    } else {
+        undoButton.style.display = 'inline';
+    }
 }
 
 
@@ -67,6 +87,7 @@ function undo() {
     redoTimes.push(vid.currentTime);
     undoInProgress = true; // do not trigger updateTimes function
     rewind(vid, backupTime);
+    setButtonsVisibility();
 }
 
 
@@ -78,13 +99,15 @@ function redo() {
     undoTimes.push(vid.currentTime);
     undoInProgress = true;
     rewind(vid, backupTime);
+    setButtonsVisibility();
 }
 
 
 function insertControls() {
     controlPanel = document.getElementsByClassName('ytp-left-controls')[0];
+    let referenceNode = controlPanel.getElementsByClassName('ytp-volume-area')[0];
 
-    let undoButton = document.createElement('button');
+    undoButton = document.createElement('button');
     undoButton.id = 'ytz-undo';
     undoButton.classList.add('ytp-button');
     undoButton.setAttribute('aria-label', 'Rewind to backup (Ctrl+Z)');
@@ -93,9 +116,10 @@ function insertControls() {
     undoButton.onclick = function() {
         undo();
     };
-    controlPanel.append(undoButton);
+    undoButton.style.display = 'none';
+    controlPanel.insertBefore(undoButton, referenceNode);
 
-    let redoButton = document.createElement('button');
+    redoButton = document.createElement('button');
     redoButton.id = 'ytz-redo';
     redoButton.classList.add('ytp-button');
     redoButton.setAttribute('aria-label', 'Redo (Ctrl+Y)');
@@ -104,7 +128,8 @@ function insertControls() {
     redoButton.onclick = function() {
         redo();
     };
-    controlPanel.append(redoButton);
+    redoButton.style.display = 'none';
+    controlPanel.insertBefore(redoButton, referenceNode);
 }
 
 
@@ -112,6 +137,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     console.log("Got message from background page: ", msg.message);
     if (msg.message === "update") {
         initVid();
+        setButtonsVisibility();
     }
 });
 
