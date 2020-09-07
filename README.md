@@ -1,4 +1,6 @@
 # ytcancel
+[![](https://img.shields.io/chrome-web-store/users/goodnjebkdapcafcdipcnlahdppddahg)](https://chrome.google.com/webstore/detail/ctrl%20z-for-youtube/goodnjebkdapcafcdipcnlahdppddahg)
+
 Chrome extension to undo unintended rewind.
 
 You are able to undo last rewinds with Ctrl+Z as well as redo using Ctrl+Y. Current video time must change by at least 10 seconds, otherwise rewind will not be recorded.
